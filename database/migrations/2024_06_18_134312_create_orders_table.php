@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('customer_name', 100);
             $table->string('table_numb', 5);
-            $table->date('order_date');
+            $table->timestamp('order_date');
             $table->string('status', 100);
             $table->integer('total_price')->unsigned();
             $table->unsignedBigInteger('waitress_id');
