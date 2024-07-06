@@ -11,7 +11,19 @@ use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
-    public function store(Request $request){
+    public function index()
+    {
+        $order = Order::select('id', 'customer_name', 'table_numb', 'order_date', 'total_price', 'status')->get();
+
+        return response([
+            'success' => true,
+            'message' => 'Data Order Berhasil diambil!',
+            'data' => $order,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
         $validation = $request->validate([
             'customer_name' => 'required|max:100',
             'table_numb' => 'required|max:5',
@@ -24,13 +36,13 @@ class OrderController extends Controller
                 $data['order_date'] = date('Y-m-d H:s:i');
                 // $data['order_time'] = date('H:s:i');
                 $data['status'] = 'ordered';
-                $data['total_price'] = '10000';
+                $data['total_price'] = 0;
                 $data['waitress_id'] = auth()->user()->id;
                 $data['items'] = $request->items;
 
                 $order = Order::create($data);
 
-                //menggunakan foreach
+                //menggunakan foreach================================>
                 // foreach ($data['items'] as $item) {
                 //     $itemOrder = Item::where('id', $item)->first();
                 //     if ($itemOrder) {
@@ -52,6 +64,10 @@ class OrderController extends Controller
                     ]);
                 });
 
+                //edit total price
+                $order->total_price = $order->sumOrderPrice();
+                $order->save();
+
             DB::commit();
         }catch(\Throwable $th){
             DB::rollback();
@@ -64,4 +80,19 @@ class OrderController extends Controller
             'data' => $order,
         ]);
     }
+
+    public function show($id)
+    {
+        $order = Order::select('id', 'customer_name', 'table_numb', 'order_date', 'total_price', 'status', 'waitress_id', 'chasier_id')
+        ->where('id', $id)
+        ->firstOrFail();
+
+        $order->loadMissing(['waitress:id,name', 'chasier:id,name', 'orderDetail:id,order_id,item_id,price', 'orderDetail.item:id,name,price,image']);
+        return response([
+            'success' => true,
+            'message' => 'Detail Order Berhasil diambil!',
+            'data' => $order,
+        ]);
+    }
+
 }
