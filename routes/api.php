@@ -25,17 +25,10 @@ use App\Http\Controllers\API\UserController;
 Route::prefix('/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+    Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    // Route::post('/create-order', function(){
-    //     return 'create order';
-    // })->middleware(['createOrder']);
-
-    // Route::post('/finish-order', function(){
-    //     return 'finish order';
-    // })->middleware(['finishOrder']);
-
     //user
     Route::post('/user', [UserController::class, 'store'])->middleware(['createUser']);
 

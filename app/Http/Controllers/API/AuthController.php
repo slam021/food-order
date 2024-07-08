@@ -50,4 +50,15 @@ class AuthController extends Controller
             'data' => $user,
         ]);
     }
+
+    public function logout(){
+        $user = auth()->user();
+
+        $user->tokens()->delete();
+
+        return response([
+            'success' => true,
+            'message' => 'Berhasil Logout!',
+        ]);
+    }
 }
