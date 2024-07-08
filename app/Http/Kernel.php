@@ -65,7 +65,9 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'createOrder' => \App\Http\Middleware\FoodOrder\CreateOrder::class,
         'finishOrder' => \App\Http\Middleware\FoodOrder\FinishOrder::class,
+        'onProgressOrder' => \App\Http\Middleware\FoodOrder\OnProgressOrder::class,
         'createUser' => \App\Http\Middleware\FoodOrder\CreateUser::class,
         'createUpdateItem' => \App\Http\Middleware\FoodOrder\CreateUpdateItem::class,
+        'updatePayOrder' => \App\Http\Middleware\FoodOrder\UpdatePayOrder::class,
     ];
 }

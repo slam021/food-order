@@ -45,6 +45,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/item/{id}', [ItemController::class, 'update'])->middleware(['createUpdateItem']);
 
     //order
+    Route::get('/order/{id}/on-progress-order', [OrderController::class, 'onProgressOrder'])->middleware(['onProgressOrder']);
+    Route::get('/order/{id}/finish-order', [OrderController::class, 'finishOrder'])->middleware(['finishOrder']);
+    Route::get('/order/{id}/pay-order', [OrderController::class, 'payOrder'])->middleware(['updatePayOrder']);
     Route::get('/order', [OrderController::class, 'index']);
     Route::get('/order/{id}', [OrderController::class, 'show']);
     Route::post('/order', [OrderController::class, 'store'])->middleware(['createOrder']);

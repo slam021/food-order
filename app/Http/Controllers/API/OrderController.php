@@ -88,11 +88,64 @@ class OrderController extends Controller
         ->firstOrFail();
 
         $order->loadMissing(['waitress:id,name', 'chasier:id,name', 'orderDetail:id,order_id,item_id,price', 'orderDetail.item:id,name,price,image']);
+
         return response([
             'success' => true,
             'message' => 'Detail Order Berhasil diambil!',
             'data' => $order,
         ]);
     }
+
+    public function onProgressOrder($id){
+        $order = Order::findOrFail($id);
+
+        if($order->status != 'ordered'){
+            return response('Status order bukan ordered', 403);
+        }
+
+        $order->status = 'on progress';
+        $order->save();
+
+        return response([
+            'success' => true,
+            'message' => 'Status order berhasil diubah menjadi On Progress!',
+            'data' => $order,
+        ]);
+    }
+
+    public function finishOrder($id){
+        $order = Order::findOrFail($id);
+
+        if($order->status != 'on progress'){
+            return response('Status order bukan on progress', 403);
+        }
+
+        $order->status = 'done';
+        $order->save();
+
+        return response([
+            'success' => true,
+            'message' => 'Status order berhasil diubah menjadi Done!',
+            'data' => $order,
+        ]);
+    }
+
+    public function payOrder($id){
+        $order = Order::findOrFail($id);
+
+        if($order->status != 'done'){
+            return response('Status order bukan Done', 403);
+        }
+
+        $order->status = 'paid';
+        $order->save();
+
+        return response([
+            'success' => true,
+            'message' => 'Status order berhasil diubah menjadi Paid!',
+            'data' => $order,
+        ]);
+    }
+
 
 }
